@@ -6,7 +6,7 @@ def do_crane_work(file):
         data = f.read().split('\n\n')
         steps_raw = [line for line in data[1].splitlines()]
         steps_numbers = [[int(n) for n in row.split() if n.isdigit()] for row in steps_raw]
-        
+
         arr_raw = [row.replace(' ', '.') for row in data[0].splitlines()[:-1]]
         arr_plain_letters = [[e.replace('[', '.').replace(']', '.') for e in row] for row in arr_raw]
         temp_arr_numpy = np.array(arr_plain_letters)
