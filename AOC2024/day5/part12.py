@@ -10,8 +10,8 @@ def load_data(file):
 def validate(rules, line):
     status = True
     for rule in rules:
-        if all(page in line for page in rule):
-            if rule[0] in line[:line.index(rule[1])]:
+        if all(single_rule in line for single_rule in rule):
+            if line.index(rule[0]) < line.index(rule[1]):
                 continue
             else:
                 status = False
@@ -24,8 +24,8 @@ def fix(rules, line):
         loop = False
         for rule in rules:
             if all(page in line for page in rule):
-                if not rule[0] in line[:line.index(rule[1])]:
-                    idx0, idx1 = line.index(rule[0]), line.index(rule[1])
+                idx0, idx1 = line.index(rule[0]), line.index(rule[1])
+                if not idx0 < idx1:
                     line[idx0], line[idx1] = line[idx1], line[idx0]
                     loop = True   
     
