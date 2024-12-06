@@ -4,12 +4,6 @@ def load_data(file):
     with open(file, 'r') as f:
         return [list(row) for row in f.read().splitlines()]
     
-# Generator goes brrrt
-def get_direction(directions):
-    while True:
-        for direction in directions:
-            yield direction
-            
             
 def get_cords(array, arg = '^'):
     width, height = len(array[0]), len(array)
@@ -21,76 +15,63 @@ def get_cords(array, arg = '^'):
             
 def part1(array):
     # directions: up -> right -> down -> left
-    directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-    direction = get_direction(directions)
-    current_direction = next(direction)
+    dir = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+    index = 0
 
     i, j, width, height = get_cords(array=array)
     
     visited = set()
+    visited.add((i, j))
         
-    while i >= 0 and i < width and j >= 0 and j < height:
+    while True:
+        i_new, j_new = i + dir[index][0], j + dir[index][1]
+        if (i_new < 0 or i_new >= width) or (j_new < 0 or j_new >= height):
+            return visited
         
-        i_new, j_new = i + current_direction[0], j + current_direction[1]
-                
-        while i_new >= 0 and i_new < width and j_new >= 0 and j_new < height:
-
-            if array[i_new][j_new] == "#":
-                current_direction = next(direction)
-                i_new, j_new = i + current_direction[0], j + current_direction[1]
-            else:
-                break
+        elif array[i_new][j_new] == "#":
+            index = (index + 1) % 4 
+            continue
         
+        i, j = i_new, j_new 
         visited.add((i, j))
-        i, j = i_new, j_new
-            
-    return len(visited)
-
-
-def part2_solve(array, i_obst, j_obst, i, j, width, height, directions):
-    visited = set()
-    direction = get_direction(directions)
-    current_direction = next(direction)
     
-    while i >= 0 and i < width and j >= 0 and j < height:
         
-        previous_direction = current_direction
-        i_new, j_new = i + current_direction[0], j + current_direction[1]
         
-        while i_new >= 0 and i_new < width and j_new >= 0 and j_new < height:
-
-            if array[i_new][j_new] == "#" or (i_new, j_new) == (i_obst, j_obst):
-                current_direction = next(direction)
-                i_new, j_new = i + current_direction[0], j + current_direction[1]
-            else:
-                break
-        
-        visited.add(((i, j) + previous_direction))
-        i, j = i_new, j_new
-        if ((i_new, j_new) + current_direction) in visited: 
-            return True
-    
-    return False
-    
-    
-def part2(array):
+def part2_loop(array, i, j, width, height, i_obst, j_obst):
     # directions: up -> right -> down -> left
-    directions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+    dir = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+    index = 0
+    visited = set()
+    visited.add((i, j) + dir[index])
+        
+    while True:
+        i_new, j_new = i + dir[index][0], j + dir[index][1]
+        if (i_new < 0 or i_new >= width) or (j_new < 0 or j_new >= height):
+            return False
+        
+        elif array[i_new][j_new] == "#" or (i_obst, j_obst) == (i_new, j_new):
+            index = (index + 1) % 4 
+            continue
+        
+        i, j = i_new, j_new 
+        if ((i, j) + dir[index]) in visited:
+            return True
+        else:
+            visited.add((i, j) + dir[index])
 
+
+def part2(array, paths):
     i, j, width, height = get_cords(array=array)
-    
     sum = 0
-    
-    for i_obst in range(width):
-        for j_obst in range(height):
-            if array[i_obst][j_obst] == ".":
-                sum += int(part2_solve(array, i_obst, j_obst, i, j, width, height, directions))
-                                        
-    return sum            
+    for path in paths:
+        sum += int(part2_loop(array, i, j, width, height, path[0], path[1]))
+    return sum
+                
 
 start = timer()
 array = load_data('data.txt')
-print(f"Part one: {part1(array)}")
-print(f"Part two: {part2(array)}")
+part1_result = part1(array)
+print(f"Part one: {len(part1_result)}")
+print(f"Part two: {part2(array, part1_result)}")
 end = timer()
-print(f"execution time: ", end - start, "s")
+print(f"execution time: { end - start:.3f}s")
