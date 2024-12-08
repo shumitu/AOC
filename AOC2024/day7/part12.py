@@ -40,10 +40,12 @@ def part2(data):
     return sum(line[0] for line in data if val_str2(line[0], line[1:]))
 
 
-start = timer()
 data = load_data('data.txt')
-print(f"Part one: {part1(data)}")
-print(f"Part two: {part2(data)}")
+start = timer()
 
+print(f"Part one: {part1(data)}")
 end = timer()
-print(f"Execution time: {end - start:.3f}s")
+print(f"Part two: {part2(data)}")
+end2 = timer()
+print(f"Part1 execution time: {(end - start)*1000:.3f}ms")
+print(f"Part2 execution time: {(end2 - end)*1000:.3f}ms")
