@@ -1,16 +1,15 @@
 import itertools as it
+from collections import defaultdict
 from timeit import default_timer as timer
 
 def load_data(file):
-    antenas = {}
+    antenas = defaultdict(list)
     with open(file, 'r') as f:
         data = [list(line) for line in f.read().splitlines()]
         width, height = len(data[0]), len(data)
         for i in range(width):
             for j in range(height):
                 if data[i][j] != '.':
-                    if data[i][j] not in antenas:
-                        antenas[data[i][j]] = []
                     antenas[data[i][j]].append((i, j))
     return antenas, width, height
     
@@ -18,7 +17,7 @@ def load_data(file):
 def part1(antenas, width, height):
     
     antinode_cords = set()
-    
+        
     for coords in antenas.values():
         for p1, p2 in it.permutations(coords, 2):
             dist = (p2[0] - p1[0], p2[1] - p1[1])
