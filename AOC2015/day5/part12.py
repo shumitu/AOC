@@ -37,8 +37,7 @@ def part2(strings):
     return nice_strings
             
 
-
-strings = load_data('/mnt/c/Users/darkd/Documents/GitHub/AOC/AOC2015/day5/data.txt')
+strings = load_data('data.txt')
 part1(strings)
 print(f"Part one: {part1(strings)}")
 print(f"Part two: {part2(strings)}")
