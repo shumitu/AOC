@@ -44,7 +44,7 @@ def part12(data, skip = False):
         
     return sum
     
-data = load_data('/mnt/c/Users/darkd/Documents/GitHub/AOC/AOC2015/day12/data.json')
+data = load_data('data.json')
 
 print(f"Part one: {part12(data)}")
 print(f"Part two: {part12(data, True)}")
