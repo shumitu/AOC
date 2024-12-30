@@ -6,7 +6,7 @@ from timeit import default_timer as timer
 def load_data(file):
     with open(file, "r") as f:
         rules = defaultdict(int)
-        tmp = [[_ for _ in l.split()] for l in f.read().splitlines()]
+        tmp = [l.split() for l in f.read().splitlines()]
         # {(name1, name2): value} - if 'gain': +, else -
         # rules = {(e[0], e[-1].rstrip(".")):int(e[3]) if e[2] == "gain" else -int(e[3]) for e in tmp}
         for e in tmp:
